@@ -7,8 +7,8 @@ class DetailTransaksi extends Model
 {
     protected $table = 'detail_transaksi';
     protected $primaryKey = 'id_detail';
-    protected $fillable = ['id_transaksi', 'id_produk', 'id_user', 'jumlah', 'subtotal'];
-    protected $with = ['product', 'user'];
+    protected $fillable = ['id_transaksi', 'id_produk', 'jumlah', 'subtotal'];
+    protected $with = ['produk'];
 
     public function transaksi()
     {
@@ -20,13 +20,4 @@ class DetailTransaksi extends Model
         return $this->belongsTo(Produk::class, 'id_produk');
     }
 
-    public function product()
-    {
-        return $this->belongsTo(Produk::class, 'id_produk');
-    }
-
-    public function user()
-    {
-        return $this->belongsTo(User::class, 'id_user');
-    }
 }

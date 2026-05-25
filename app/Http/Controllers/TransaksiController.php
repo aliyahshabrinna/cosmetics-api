@@ -11,12 +11,12 @@ class TransaksiController extends Controller
 {
     public function index()
     {
-        return response()->json(['success' => true, 'data' => Transaksi::with(['pelanggan', 'details.product', 'details.user'])->get()]);
+        return response()->json(['success' => true, 'data' => Transaksi::with(['pelanggan', 'details.produk'])->get()]);
     }
 
     public function show($id)
     {
-        $transaksi = Transaksi::with(['pelanggan', 'details.product', 'details.user'])->find($id);
+        $transaksi = Transaksi::with(['pelanggan', 'details.produk'])->find($id);
         if (!$transaksi) return response()->json(['success' => false, 'message' => 'Transaksi tidak ditemukan.'], 404);
         return response()->json(['success' => true, 'data' => $transaksi]);
     }
@@ -54,11 +54,13 @@ class TransaksiController extends Controller
             ]);
 
             foreach ($details as $d) {
-                DetailTransaksi::create(array_merge($d, ['id_transaksi' => $transaksi->id_transaksi, 'id_user' => auth()->user()->id ?? null]));
-            }
+    DetailTransaksi::create(array_merge($d, [
+        'id_transaksi' => $transaksi->id_transaksi
+    ]));
+}
 
             DB::commit();
-            return response()->json(['success' => true, 'message' => 'Transaksi berhasil dibuat.', 'data' => $transaksi->load(['pelanggan', 'details.product', 'details.user'])], 201);
+            return response()->json(['success' => true, 'message' => 'Transaksi berhasil dibuat.', 'data' => $transaksi->load(['pelanggan', 'details.produk'])], 201);
 
         } catch (\Exception $e) {
             DB::rollBack();
@@ -74,62 +76,62 @@ class TransaksiController extends Controller
         return response()->json(['success' => true, 'message' => 'Transaksi berhasil dihapus.']);
     }
 
-    public function storeDetail(Request $request, $id)
-    {
-        $transaksi = Transaksi::find($id);
-        if (!$transaksi) return response()->json(['success' => false, 'message' => 'Transaksi tidak ditemukan.'], 404);
+   public function storeDetail(Request $request, $id)
+{
+    $request->validate([
+        'id_produk' => 'required|exists:produk,id_produk',
+        'jumlah' => 'required|integer|min:1'
+    ]);
 
-        $request->validate([
-            'id_produk' => 'required|exists:produk,id_produk',
-            'jumlah'    => 'required|integer|min:1',
-        ]);
+    $transaksi = Transaksi::find($id);
 
-        $produk = Produk::find($request->id_produk);
-        
-        // Check jika detail sudah ada
-        $detail = DetailTransaksi::where('id_transaksi', $id)
-            ->where('id_produk', $request->id_produk)
-            ->first();
-
-        if ($detail) {
-            // Jika sudah ada, update qty dan subtotal
-            if ($produk->stok < $request->jumlah) {
-                return response()->json(['success' => false, 'message' => 'Stok tidak mencukupi.'], 422);
-            }
-            $oldSubtotal = $detail->subtotal;
-            $newQty = $detail->jumlah + $request->jumlah;
-            $newSubtotal = $produk->harga * $newQty;
-            $addedSubtotal = $newSubtotal - $oldSubtotal;
-            
-            $detail->jumlah = $newQty;
-            $detail->subtotal = $newSubtotal;
-            $detail->save();
-            
-            $transaksi->increment('total_bayar', $addedSubtotal);
-            $produk->decrement('stok', $request->jumlah);
-            
-            return response()->json(['success' => true, 'message' => 'Detail berhasil diperbarui.', 'data' => $detail->load('product','user')], 200);
-        } else {
-            // Insert baru jika belum ada
-            if ($produk->stok < $request->jumlah) {
-                return response()->json(['success' => false, 'message' => 'Stok tidak mencukupi.'], 422);
-            }
-
-            $subtotal = $produk->harga * $request->jumlah;
-            $detail = DetailTransaksi::create([
-                'id_transaksi' => $id,
-                'id_produk'    => $request->id_produk,
-                'id_user'      => auth()->user()->id ?? null,
-                'jumlah'       => $request->jumlah,
-                'subtotal'     => $subtotal,
-            ]);
-
-            $transaksi->increment('total_bayar', $subtotal);
-            $produk->decrement('stok', $request->jumlah);
-
-            return response()->json(['success' => true, 'message' => 'Detail berhasil ditambahkan.', 'data' => $detail->load('product','user')], 201);
-        }
+    if (!$transaksi) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Transaksi tidak ditemukan'
+        ], 404);
     }
+
+    $produk = Produk::find($request->id_produk);
+
+    if (!$produk) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Produk tidak ditemukan'
+        ], 404);
+    }
+
+    if ($produk->stok < $request->jumlah) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Stok tidak cukup'
+        ], 422);
+    }
+
+    $subtotal = $produk->harga * $request->jumlah;
+
+    $detail = DetailTransaksi::create([
+        'id_transaksi' => $id,
+        'id_produk' => $request->id_produk,
+        'jumlah' => $request->jumlah,
+        'subtotal' => $subtotal
+    ]);
+
+    $produk->stok -= $request->jumlah;
+    $produk->save();
+
+    $transaksi->total_bayar =
+        DetailTransaksi::where('id_transaksi', $id)
+        ->sum('subtotal');
+
+    $transaksi->save();
+
+    return response()->json([
+        'success' => true,
+        'message' => 'Detail transaksi berhasil ditambahkan',
+        'data' => $detail
+    ]);
+}
 
     public function destroyDetail($id, $idDetail)
     {

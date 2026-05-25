@@ -19,13 +19,16 @@ use App\Http\Controllers\StatistikController;
 */
 
 Route::post('/login', [AuthController::class, 'login']);
-Route::post('/logout', [AuthController::class, 'logout']);
+Route::post('/register', [AuthController::class, 'register']);
 
-/*
-|--------------------------------------------------------------------------
-| DATA MASTER
-|--------------------------------------------------------------------------
-*/
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/logout', [AuthController::class, 'logout']);
+
+    /*
+    |--------------------------------------------------------------------------
+    | DATA MASTER
+    |--------------------------------------------------------------------------
+    */
 
 Route::apiResource('kategori', KategoriController::class);
 Route::apiResource('merk', MerkController::class);
@@ -53,6 +56,11 @@ Route::delete('/transaksi/{id}/detail/{idDetail}', [TransaksiController::class, 
 |--------------------------------------------------------------------------
 */
 
-Route::get('/statistik/ringkasan', [StatistikController::class, 'ringkasan']);
-Route::get('/statistik/transaksi', [StatistikController::class, 'transaksiPerBulan']);
-Route::get('/statistik/produk-terlaris', [StatistikController::class, 'produkTerlaris']);
+    Route::prefix('statistik')->group(function () {
+        Route::get('/harian', [StatistikController::class, 'harian']);
+        Route::get('/bulanan', [StatistikController::class, 'bulanan']);
+        Route::get('/tahunan', [StatistikController::class, 'tahunan']);
+        Route::get('/produk-terlaris', [StatistikController::class, 'produkTerlaris']);
+        Route::get('/ringkasan', [StatistikController::class, 'ringkasan']);
+    });
+});
