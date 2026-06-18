@@ -9,14 +9,24 @@ class AuthController extends Controller
 {
     public function register(Request $request)
     {
+        // 1. Validasi semua data yang dikirim dari React
         $request->validate([
             'username' => 'required|string|unique:users,username',
-            'password' => 'required|string|min:6',
+            'password' => 'required|string|min:5', // Kita turunkan ke min:5 agar pas dengan inputanmu
+            'nama'     => 'required|string',
+            'email'    => 'required|string|email|unique:users,email',
+            'hp'       => 'required|string',
+            'role'     => 'string',
         ]);
 
+        // 2. Simpan semua datanya ke table users
         $user = User::create([
             'username' => $request->username,
             'password' => Hash::make($request->password),
+            'nama'     => $request->nama,
+            'email'    => $request->email,
+            'hp'       => $request->hp,
+            'role'     => $request->role ?? 'pelanggan',
         ]);
 
         return response()->json([
@@ -25,7 +35,6 @@ class AuthController extends Controller
             'user' => $user,
         ], 201);
     }
-
     public function login(Request $request)
     {
         $request->validate([

@@ -11,9 +11,13 @@ class User extends Authenticatable
     protected $table = 'users';
 
     protected $fillable = [
-        'username',
-        'password',
-    ];
+    'nama',
+    'username',
+    'email', // <--- Pastikan baris ini ada di sini!
+    'password',
+    'no_hp',
+    'alamat',
+];
 
     protected $hidden = [
         'password',

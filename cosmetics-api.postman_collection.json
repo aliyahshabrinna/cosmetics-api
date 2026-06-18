@@ -1,0 +1,1138 @@
+{
+  "info": {
+    "name": "cosmetics-api",
+    "description": "Postman collection for cosmetics API endpoints",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "version": "1.0.0"
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Register",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"admin\",\n  \"password\": \"admin123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/register",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "register"]
+            }
+          }
+        },
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"admin\",\n  \"password\": \"admin123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "login"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "let json = pm.response.json();",
+                  "if (json.token) {",
+                  "    pm.collectionVariables.set('token', json.token);",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/logout",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "logout"]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.collectionVariables.unset('token');"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Varian",
+      "item": [
+        {
+          "name": "List Varian",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/varian",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "varian"]
+            }
+          }
+        },
+        {
+          "name": "Get Varian by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/varian/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "varian", ":id"]
+            }
+          }
+        },
+        {
+          "name": "Create Varian",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id_produk\": 1,\n  \"nama_varian\": \"Merah\",\n  \"kode_warna_hex\": \"#FF0000\",\n  \"stok_varian\": 10\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/varian",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "varian"]
+            }
+          }
+        },
+        {
+          "name": "Update Varian",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nama_varian\": \"Merah Tua\",\n  \"stok_varian\": 8\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/varian/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "varian", ":id"]
+            }
+          }
+        },
+        {
+          "name": "Delete Varian",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/varian/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "varian", ":id"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Produk",
+      "item": [
+        {
+          "name": "List Produk",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/produk",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "produk"]
+            }
+          }
+        },
+        {
+          "name": "Get Produk by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/produk/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "produk", ":id"]
+            }
+          }
+        },
+        {
+          "name": "Create Produk",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id_kategori\": 1,\n  \"id_merk\": 1,\n  \"nama_produk\": \"Lipstik\",\n  \"harga\": 150000,\n  \"stok\": 50,\n  \"deskripsi\": \"Lipstik tahan lama\",\n  \"gambar\": \"lipstik.jpg\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/produk",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "produk"]
+            }
+          }
+        },
+        {
+          "name": "Update Produk",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nama_produk\": \"Lipstik Matte\",\n  \"stok\": 45\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/produk/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "produk", ":id"]
+            }
+          }
+        },
+        {
+          "name": "Delete Produk",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/produk/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "produk", ":id"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Kategori",
+      "item": [
+        {
+          "name": "List Kategori",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/kategori",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "kategori"]
+            }
+          }
+        },
+        {
+          "name": "Get Kategori by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/kategori/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "kategori", ":id"]
+            }
+          }
+        },
+        {
+          "name": "Create Kategori",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nama_kategori\": \"Makeup\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/kategori",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "kategori"]
+            }
+          }
+        },
+        {
+          "name": "Update Kategori",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nama_kategori\": \"Skincare\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/kategori/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "kategori", ":id"]
+            }
+          }
+        },
+        {
+          "name": "Delete Kategori",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/kategori/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "kategori", ":id"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Merk",
+      "item": [
+        {
+          "name": "List Merk",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/merk",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "merk"]
+            }
+          }
+        },
+        {
+          "name": "Get Merk by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/merk/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "merk", ":id"]
+            }
+          }
+        },
+        {
+          "name": "Create Merk",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nama_merk\": \"Brand A\",\n  \"asal_negara\": \"Indonesia\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/merk",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "merk"]
+            }
+          }
+        },
+        {
+          "name": "Update Merk",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nama_merk\": \"Brand B\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/merk/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "merk", ":id"]
+            }
+          }
+        },
+        {
+          "name": "Delete Merk",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/merk/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "merk", ":id"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Pelanggan",
+      "item": [
+        {
+          "name": "List Pelanggan",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/pelanggan",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "pelanggan"]
+            }
+          }
+        },
+        {
+          "name": "Get Pelanggan by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/pelanggan/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "pelanggan", ":id"]
+            }
+          }
+        },
+        {
+          "name": "Create Pelanggan",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nama_pelanggan\": \"Budi\",\n  \"email\": \"budi@example.com\",\n  \"telepon\": \"081234567890\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/pelanggan",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "pelanggan"]
+            }
+          }
+        },
+        {
+          "name": "Update Pelanggan",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nama_pelanggan\": \"Budi Santoso\",\n  \"email\": \"budi.santoso@example.com\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/pelanggan/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "pelanggan", ":id"]
+            }
+          }
+        },
+        {
+          "name": "Delete Pelanggan",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/pelanggan/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "pelanggan", ":id"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Transaksi",
+      "item": [
+        {
+          "name": "List Transaksi",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/transaksi",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "transaksi"]
+            }
+          }
+        },
+        {
+          "name": "Get Transaksi by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/transaksi/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "transaksi", ":id"]
+            }
+          }
+        },
+        {
+          "name": "Create Transaksi",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id_pelanggan\": 1,\n  \"items\": [\n    {\n      \"id_produk\": 1,\n      \"jumlah\": 2\n    }\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/transaksi",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "transaksi"]
+            }
+          }
+        },
+        {
+          "name": "Delete Transaksi",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/transaksi/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "transaksi", ":id"]
+            }
+          }
+        },
+        {
+          "name": "Create Transaksi Detail",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id_produk\": 1,\n  \"jumlah\": 1\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/transaksi/:id/detail",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "transaksi", ":id", "detail"]
+            }
+          }
+        },
+        {
+          "name": "Delete Transaksi Detail",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/transaksi/:id/detail/:idDetail",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "transaksi", ":id", "detail", ":idDetail"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Profile",
+      "item": [
+        {
+          "name": "Get Profile",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/profile",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "profile"]
+            }
+          }
+        },
+        {
+          "name": "Update Profile",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nama\": \"Nama Baru\",\n  \"no_hp\": \"081234567890\",\n  \"alamat\": \"Jalan Contoh 123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/profile",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "profile"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Cart",
+      "item": [
+        {
+          "name": "List Cart",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/cart",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "cart"]
+            }
+          }
+        },
+        {
+          "name": "Add to Cart",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"produk_id\": 1,\n  \"qty\": 2\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/cart",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "cart"]
+            }
+          }
+        },
+        {
+          "name": "Delete Cart Item",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/cart/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "cart", ":id"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Wishlist",
+      "item": [
+        {
+          "name": "List Wishlist",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/wishlist",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "wishlist"]
+            }
+          }
+        },
+        {
+          "name": "Add to Wishlist",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"produk_id\": 1\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/wishlist",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "wishlist"]
+            }
+          }
+        },
+        {
+          "name": "Delete Wishlist Item",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/wishlist/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "wishlist", ":id"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Alamat",
+      "item": [
+        {
+          "name": "List Alamat",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/alamat",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "alamat"]
+            }
+          }
+        },
+        {
+          "name": "Create Alamat",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nama_penerima\": \"Budi\",\n  \"no_hp\": \"081234567890\",\n  \"alamat\": \"Jalan Contoh 123\",\n  \"kota\": \"Jakarta\",\n  \"provinsi\": \"DKI Jakarta\",\n  \"kode_pos\": \"12345\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/alamat",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "alamat"]
+            }
+          }
+        },
+        {
+          "name": "Update Alamat",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"alamat\": \"Jalan Contoh 456\",\n  \"kota\": \"Depok\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/alamat/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "alamat", ":id"]
+            }
+          }
+        },
+        {
+          "name": "Delete Alamat",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/alamat/:id",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "alamat", ":id"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "My Orders",
+      "item": [
+        {
+          "name": "List My Orders",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/my-orders",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "my-orders"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Statistik",
+      "item": [
+        {
+          "name": "Harian",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/statistik/harian",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "statistik", "harian"]
+            }
+          }
+        },
+        {
+          "name": "Bulanan",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/statistik/bulanan",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "statistik", "bulanan"]
+            }
+          }
+        },
+        {
+          "name": "Tahunan",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/statistik/tahunan",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "statistik", "tahunan"]
+            }
+          }
+        },
+        {
+          "name": "Produk Terlaris",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/statistik/produk-terlaris",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "statistik", "produk-terlaris"]
+            }
+          }
+        },
+        {
+          "name": "Ringkasan",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/statistik/ringkasan",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "statistik", "ringkasan"]
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost"
+    },
+    {
+      "key": "token",
+      "value": ""
+    }
+  ]
+}
