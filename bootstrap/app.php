@@ -15,5 +15,13 @@ return Application::configure(basePath: dirname(__DIR__))
         //
     })
     ->withExceptions(function (Exceptions $exceptions): void {
-        //
+        // Tambahkan fungsi penangkap error API di bawah ini:
+        $exceptions->respond(function ($request, Throwable $e) {
+            if ($request->is('api/*')) {
+                return response()->json([
+                    'message' => $e->getMessage(),
+                    'error_type' => get_class($e)
+                ], 500);
+            }
+        });
     })->create();
