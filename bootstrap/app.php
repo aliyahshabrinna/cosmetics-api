@@ -12,7 +12,7 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        //
+        $middleware->trustProxies(at: '*');
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->respond(function ($request, Throwable $e) {
@@ -22,6 +22,11 @@ return Application::configure(basePath: dirname(__DIR__))
                     $status = $e->getStatusCode();
                 } elseif (property_exists($e, 'status')) {
                     $status = $e->status;
+                }
+
+                // Sanitize status code to ensure it is a valid HTTP status code
+                if (!is_int($status) || $status < 100 || $status > 599) {
+                    $status = 500;
                 }
 
                 $response = response()->json([
