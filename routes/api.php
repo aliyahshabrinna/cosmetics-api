@@ -107,4 +107,13 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/produk-terlaris', [StatistikController::class, 'produkTerlaris']);
         Route::get('/ringkasan', [StatistikController::class, 'ringkasan']);
     });
+    // Tempelkan ini di baris paling akhir file routes/api.php kamu
+Route::get('/pindah-database-aliyah', function() {
+    try {
+        \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
+        return "Database berhasil diperbarui: " . \Illuminate\Support\Facades\Artisan::output();
+    } catch (\Exception $e) {
+        return "Gagal migrasi: " . $e->getMessage();
+    }
+});
 });
