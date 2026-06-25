@@ -28,6 +28,14 @@ Route::get('/produk', [ProdukController::class, 'index']);
 Route::get('/produk/{id}', [ProdukController::class, 'show']);
 Route::get('/home-data', [ProdukController::class, 'getHomeData']);
 
+Route::get('/pindah-database-aliyah', function() {
+    try {
+        \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
+        return "Database berhasil diperbarui: " . \Illuminate\Support\Facades\Artisan::output();
+    } catch (\Exception $e) {
+        return "Gagal migrasi: " . $e->getMessage();
+    }
+});
 // Rute pembantu jika ada request GET ke /api/login lewat browser biasa
 Route::get('/login', function () {
     return response()->json([
@@ -108,12 +116,5 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/ringkasan', [StatistikController::class, 'ringkasan']);
     });
     // Tempelkan ini di baris paling akhir file routes/api.php kamu
-Route::get('/pindah-database-aliyah', function() {
-    try {
-        \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
-        return "Database berhasil diperbarui: " . \Illuminate\Support\Facades\Artisan::output();
-    } catch (\Exception $e) {
-        return "Gagal migrasi: " . $e->getMessage();
-    }
-});
+
 });
