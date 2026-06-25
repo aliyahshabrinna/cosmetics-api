@@ -1,10 +1,7 @@
-use Illuminate\Support\Facades\Artisan;
+<?php
 
-Route::get('/api/pindah-database-aliyah', function() {
-    try {
-        Artisan::call('migrate', ['--force' => true]);
-        return "Database berhasil diperbarui: " . Artisan::output();
-    } catch (\Exception $e) {
-        return "Gagal migrasi: " . $e->getMessage();
-    }
+use Illuminate\Support\Facades\Route;
+
+Route::get('/', function () {
+    return view('welcome');
 });
