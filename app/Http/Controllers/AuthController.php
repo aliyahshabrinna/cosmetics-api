@@ -5,6 +5,7 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 
 class AuthController extends Controller
 {
@@ -27,6 +28,9 @@ class AuthController extends Controller
             ], 422);
         }
 
+        // Buat token string acak manual
+        $manualToken = bin2hex(random_bytes(40));
+
         $user = User::create([
             'username' => $request->username,
             'password' => Hash::make($request->password),
@@ -34,14 +38,13 @@ class AuthController extends Controller
             'email'    => $request->email,
             'hp'       => $request->hp,
             'role'     => $request->role ?? 'pelanggan',
+            'token'    => $manualToken,
         ]);
-
-        $token = $user->createToken('auth_token')->plainTextToken;
 
         return response()->json([
             'success' => true,
             'message' => 'Registrasi berhasil.',
-            'token'   => $token,
+            'token'   => $manualToken,
             'user'    => $user,
         ], 201);
     }
@@ -62,21 +65,19 @@ class AuthController extends Controller
             ], 401);
         }
 
-        $token = $user->createToken('auth_token')->plainTextToken;
+        // Buat token string acak manual & simpan ke database
+        $manualToken = bin2hex(random_bytes(40));
+        $user->update(['token' => $manualToken]);
 
         return response()->json([
             'success' => true,
-            'token'   => $token,
+            'token'   => $manualToken,
             'user'    => $user,
         ], 200);
     }
 
     public function logout(Request $request)
     {
-        if ($request->user() && $request->user()->currentAccessToken()) {
-            $request->user()->currentAccessToken()->delete();
-        }
-
         return response()->json([
             'success' => true,
             'message' => 'Logout berhasil'
