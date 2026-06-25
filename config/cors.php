@@ -12,10 +12,16 @@ return [
 
     'allowed_methods' => ['*'],
 
-'allowed_origins' => [
-        'https://cosmetics-frontend-wfzx.vercel.app',
+    'allowed_origins' => [
+        'http://localhost:5173',
+        'http://127.0.0.1:5173',
+        'https://cosmetics-frontend-wfzx.vercel.app', // Domain utama Vercel
     ],
-    'allowed_origins_patterns' => [],
+
+    // ANTIGRAVITY: Mengizinkan semua subdomain preview bawaan vercel secara otomatis
+    'allowed_origins_patterns' => [
+        '/^https:\/\/cosmetics-frontend-.*\.vercel\.app$/',
+    ],
 
     'allowed_headers' => ['*'],
 
@@ -23,6 +29,6 @@ return [
 
     'max_age' => 0,
 
-    'supports_credentials' => true, // DIUBAH JADI TRUE
+    'supports_credentials' => true,
 
 ];
