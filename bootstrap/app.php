@@ -11,42 +11,9 @@ return Application::configure(basePath: dirname(__DIR__))
         commands: __DIR__.'/../routes/console.php',
         health: '/up',
     )
-    ->withMiddleware(function (Middleware $middleware): void {
-        $middleware->trustProxies(at: '*');
+    ->withMiddleware(function (Middleware $middleware) {
+        //
     })
-    ->withExceptions(function (Exceptions $exceptions): void {
-        $exceptions->respond(function ($request, Throwable $e) {
-            if ($request->is('api/*')) {
-                $status = 500;
-                if (method_exists($e, 'getStatusCode')) {
-                    $status = $e->getStatusCode();
-                } elseif (property_exists($e, 'status')) {
-                    $status = $e->status;
-                }
-
-                // Sanitize status code to ensure it is a valid HTTP status code
-                if (!is_int($status) || $status < 100 || $status > 599) {
-                    $status = 500;
-                }
-
-                $response = response()->json([
-                    'success' => false,
-                    'message' => $e->getMessage() ?: 'Terjadi kesalahan pada server.',
-                    'error' => [
-                        'type' => get_class($e),
-                        'code' => $e->getCode(),
-                        'file' => basename($e->getFile()),
-                        'line' => $e->getLine()
-                    ]
-                ], $status);
-
-                $origin = $request->headers->get('Origin') ?: '*';
-                $response->headers->set('Access-Control-Allow-Origin', $origin);
-                $response->headers->set('Access-Control-Allow-Credentials', 'true');
-                $response->headers->set('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-                $response->headers->set('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
-
-                return $response;
-            }
-        });
+    ->withExceptions(function (Exceptions $exceptions) {
+        // Biarkan kosong agar Laravel menangani error secara standar dan aman
     })->create();
