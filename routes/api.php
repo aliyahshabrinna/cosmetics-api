@@ -18,11 +18,10 @@ use App\Http\Controllers\ProfileController;
 
 /*
 |--------------------------------------------------------------------------
-| ROUTE PUBLIK (Bisa Diakses Tanpa Login)
+| 1. ROUTE PUBLIK (Bebas Diakses Siapa Saja, Bebas dari Sanctum)
 |--------------------------------------------------------------------------
 */
 
-// Jalur darurat migrasi ditaruh paling atas agar bebas hambatan
 Route::get('/pindah-database-aliyah', function() {
     try {
         \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
@@ -39,6 +38,7 @@ Route::get('/pindah-database-aliyah', function() {
     }
 });
 
+// Pastikan dua rute ini berada di luar dan di atas middleware auth:sanctum!
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/register', [AuthController::class, 'register']); 
 
@@ -46,19 +46,14 @@ Route::get('/produk', [ProdukController::class, 'index']);
 Route::get('/produk/{id}', [ProdukController::class, 'show']);
 Route::get('/home-data', [ProdukController::class, 'getHomeData']);
 
-Route::get('/unauthorized', function () {
-    return response()->json([
-        'success' => false,
-        'message' => 'Sesi Anda telah habis atau Token tidak valid. Silakan lakukan POST login kembali.'
-    ], 401);
-})->name('login');
 
 /*
 |--------------------------------------------------------------------------
-| ROUTE PROTECTED (Harus Login / Pakai Token)
+| 2. ROUTE PROTECTED (Hanya Bisa Diakses Jika Sudah Login / Punya Token)
 |--------------------------------------------------------------------------
 */
 Route::middleware('auth:sanctum')->group(function () {
+    
     Route::post('/logout', [AuthController::class, 'logout']);
 
     Route::apiResource('kategori', KategoriController::class);
@@ -103,4 +98,5 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::get('/produk-terlaris', [StatistikController::class, 'produkTerlaris']);
         Route::get('/ringkasan', [StatistikController::class, 'ringkasan']);
     });
+    
 });
