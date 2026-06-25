@@ -12,12 +12,14 @@ return [
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => ['*'],
-
-    // ANTIGRAVITY: Mengizinkan semua subdomain preview bawaan vercel secara otomatis
-    'allowed_origins_patterns' => [
-        '/^https:\/\/cosmetics-frontend-.*\.vercel\.app$/',
+    // ANTIGRAVITY: Tulis domain Vercel barumu secara spesifik di sini (Tanpa Bintang)
+    'allowed_origins' => [
+        'http://localhost:5173',
+        'http://127.0.0.1:5173',
+        'https://cosmetics-frontend-ziq2.vercel.app', 
     ],
+
+    'allowed_origins_patterns' => [],
 
     'allowed_headers' => ['*'],
 
@@ -25,6 +27,6 @@ return [
 
     'max_age' => 0,
 
-    'supports_credentials' => false,
+    'supports_credentials' => true, // Wajib true karena berpasangan dengan domain spesifik di atas
 
 ];
