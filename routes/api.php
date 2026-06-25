@@ -98,4 +98,9 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::prefix('statistik')->group(function () {
         Route::get('/harian', [StatistikController::class, 'harian']);
-        Route::get('/
+        Route::get('/bulanan', [StatistikController::class, 'bulanan']);
+        Route::get('/tahunan', [StatistikController::class, 'tahunan']);
+        Route::get('/produk-terlaris', [StatistikController::class, 'produkTerlaris']);
+        Route::get('/ringkasan', [StatistikController::class, 'ringkasan']);
+    });
+});
