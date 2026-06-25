@@ -2,10 +2,11 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Database\Schema\Schema;
+use Illuminate\Support\Facades\Schema; // <--- INI YANG BENAR
 
 return new class extends Migration
 {
+// ... sisa kode di bawahnya biarkan tetap sama ...
     public function up(): void
     {
         Schema::create('produk', function (Blueprint $table) {
