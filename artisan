@@ -6,6 +6,27 @@ use Symfony\Component\Console\Input\ArgvInput;
 
 define('LARAVEL_START', microtime(true));
 
+// Sanitize PORT argument for php artisan serve to prevent literal "$PORT" string crash
+if (isset($_SERVER['argv']) && is_array($_SERVER['argv'])) {
+    foreach ($_SERVER['argv'] as $key => $arg) {
+        if (str_starts_with($arg, '--port=')) {
+            $portVal = substr($arg, 7);
+            if (!is_numeric($portVal) || (int)$portVal <= 0) {
+                $envPort = getenv('PORT');
+                $newPort = (is_numeric($envPort) && (int)$envPort > 0) ? (int)$envPort : 8080;
+                $_SERVER['argv'][$key] = '--port=' . $newPort;
+            }
+        } elseif ($arg === '--port' && isset($_SERVER['argv'][$key + 1])) {
+            $portVal = $_SERVER['argv'][$key + 1];
+            if (!is_numeric($portVal) || (int)$portVal <= 0) {
+                $envPort = getenv('PORT');
+                $newPort = (is_numeric($envPort) && (int)$envPort > 0) ? (int)$envPort : 8080;
+                $_SERVER['argv'][$key + 1] = (string)$newPort;
+            }
+        }
+    }
+}
+
 // Register the Composer autoloader...
 require __DIR__.'/vendor/autoload.php';
 
