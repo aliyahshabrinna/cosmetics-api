@@ -19,10 +19,8 @@ return [
 
 'allowed_methods' => ['*'],
 
-'allowed_origins' => [
-    'https://cosmetics-frontend-wfzx-jbdagqlt6-aliyahs-projects-32011e54.vercel.app',
-    'https://cosmetics-frontend-wfzx.vercel.app'
-],
+'allowed_origins' => ['*'], // Mengizinkan semua origin termasuk Vercel kamu
+
 'allowed_origins_patterns' => [],
 
 'allowed_headers' => ['*'],
