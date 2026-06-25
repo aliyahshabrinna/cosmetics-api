@@ -13,10 +13,14 @@ return new class extends Migration
     {
         if (!Schema::hasTable('users')) {
             Schema::create('users', function (Blueprint $table) {
-                $table->id();
-                $table->string('username')->unique();
-                $table->string('password');
-                $table->rememberToken();
+                $table->id(); // BIGINT AUTO_INCREMENT
+                $table->string('username', 100);
+                $table->string('email', 255)->nullable(); // Menambahkan kolom email agar sesuai HeidiSQL kamu
+                $table->string('password', 255);
+                $table->enum('role', ['admin', 'pelanggan'])->default('pelanggan');
+                $table->string('kode_unix', 50)->nullable();
+                $table->string('token', 255)->nullable();
+                $table->timestamp('token_created_at')->nullable();
                 $table->timestamps();
             });
         }
