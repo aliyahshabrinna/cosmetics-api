@@ -4,37 +4,48 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
 {
     public function register(Request $request)
     {
-        // 1. Validasi semua data yang dikirim dari React
-        $request->validate([
+        $validator = Validator::make($request->all(), [
             'username' => 'required|string|unique:users,username',
-            'password' => 'required|string|min:5', // Kita turunkan ke min:5 agar pas dengan inputanmu
-            'nama'     => 'required|string',
-            'email'    => 'required|string|email|unique:users,email',
-            'hp'       => 'required|string',
-            'role'     => 'string',
+            'password' => 'required|string|min:5',
+            'nama'     => 'nullable|string',
+            'email'    => 'nullable|string',
+            'hp'       => 'nullable|string',
+            'role'     => 'nullable|string',
         ]);
 
-        // 2. Simpan semua datanya ke table users
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Validasi gagal',
+                'errors'  => $validator->errors()
+            ], 422);
+        }
+
         $user = User::create([
             'username' => $request->username,
             'password' => Hash::make($request->password),
-            'nama'     => $request->nama,
+            'nama'     => $request->nama ?? $request->username,
             'email'    => $request->email,
             'hp'       => $request->hp,
             'role'     => $request->role ?? 'pelanggan',
         ]);
 
+        $token = $user->createToken('auth_token')->plainTextToken;
+
         return response()->json([
             'success' => true,
             'message' => 'Registrasi berhasil.',
-            'user' => $user,
+            'token'   => $token,
+            'user'    => $user,
         ], 201);
     }
+
     public function login(Request $request)
     {
         $request->validate([
@@ -55,14 +66,16 @@ class AuthController extends Controller
 
         return response()->json([
             'success' => true,
-            'token' => $token,
-            'user' => $user,
+            'token'   => $token,
+            'user'    => $user,
         ], 200);
     }
 
     public function logout(Request $request)
     {
-        $request->user()->currentAccessToken()->delete();
+        if ($request->user() && $request->user()->currentAccessToken()) {
+            $request->user()->currentAccessToken()->delete();
+        }
 
         return response()->json([
             'success' => true,
